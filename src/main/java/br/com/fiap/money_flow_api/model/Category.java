@@ -1,5 +1,7 @@
 package br.com.fiap.money_flow_api.model;
 
+import java.util.Random;
+
 public class Category {
 
     private Long id;
@@ -7,7 +9,7 @@ public class Category {
     private String icon;
 
     public Category(Long id, String name, String icon) {
-        this.id = id;
+        this.id = (id == null) ? new Random().nextLong() : id;
         this.name = name;
         this.icon = icon;
     }
