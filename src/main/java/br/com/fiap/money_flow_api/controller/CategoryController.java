@@ -34,8 +34,8 @@ public class CategoryController {
                 .findFirst();
 
         if(category.isEmpty()){
-            return ResponseEntity.status(404).build();
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.status(200).body(category.get());
+        return ResponseEntity.ok(category.get());
     }
 }
