@@ -8,11 +8,14 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private List<Category> repository = new ArrayList<>();
 
@@ -23,14 +26,14 @@ public class CategoryController {
 
     @PostMapping()
     public ResponseEntity<Category> create(@RequestBody Category category) {
-        System.out.println("Cadastrando... " + category.getName());
+        logger.info("Cadastrando... " + category.getName());
         repository.add(category);
         return ResponseEntity.status(201).body(category);
     }
 
     @GetMapping("/{id}")
     public Category getById(@PathVariable Long id) {
-        System.out.println("Buscando " + id);
+        logger.info("Buscando " + id);
 
         return getCategory(id);
     }
@@ -38,12 +41,13 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById (@PathVariable Long id) {
+        logger.info("Deletando " + id);
         repository.remove(getCategory(id));
     }
 
     @PutMapping
     public Category editById (@PathVariable Long id, @RequestBody Category category) {
-
+        logger.info("Editando " + id);
         repository.remove(getCategory(id));
         category.setId(id);
         repository.add(category);
