@@ -29,10 +29,10 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public Category getById(@PathVariable Long id) {
+    public ResponseEntity<Category> getById(@PathVariable Long id) {
         System.out.println("Buscando " + id);
 
-        return getCategory(id);
+        return ResponseEntity.ok(getCategory(id));
     }
 
     @DeleteMapping("/{id}")
