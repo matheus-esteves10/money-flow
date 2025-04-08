@@ -1,6 +1,8 @@
 package br.com.fiap.money_flow_api.controller;
 
 import br.com.fiap.money_flow_api.model.Category;
+import br.com.fiap.money_flow_api.repository.CategoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,17 +19,18 @@ public class CategoryController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private List<Category> repository = new ArrayList<>();
+    @Autowired
+    private CategoryRepository repository;
 
     @GetMapping()
     public List<Category> getCategories() {
-        return repository;
+        return repository.findAll();
     }
 
     @PostMapping()
     public ResponseEntity<Category> create(@RequestBody Category category) {
         logger.info("Cadastrando... " + category.getName());
-        repository.add(category);
+        repository.save(category);
         return ResponseEntity.status(201).body(category);
     }
 
@@ -42,23 +45,22 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById (@PathVariable Long id) {
         logger.info("Deletando " + id);
-        repository.remove(getCategory(id));
+        repository.delete(getCategory(id));
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public Category editById (@PathVariable Long id, @RequestBody Category category) {
         logger.info("Editando " + id);
-        repository.remove(getCategory(id));
+
+        getCategory(id);
         category.setId(id);
-        repository.add(category);
+        repository.save(category);
 
         return category;
     }
 
     private Category getCategory(Long id){
-        return repository.stream()
-                .filter(c -> c.getId().equals(id))
-                .findFirst()
+        return repository.findById(id)
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
                 );

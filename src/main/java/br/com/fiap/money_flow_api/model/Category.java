@@ -1,44 +1,28 @@
 package br.com.fiap.money_flow_api.model;
 
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.Random;
 
+@Entity
+//@Getter
+//@Setter
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@ToString
+//@EqualsAndHashCode  -> @Data gera tudo isso
+
+@Data
 public class Category {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String icon;
 
-    public Category(Long id, String name, String icon) {
-        this.id = (id == null) ? new Random().nextLong() : id;
-        this.name = name;
-        this.icon = icon;
-    }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", icon='" + icon + '\'' +
-                '}';
-    }
 
 
 }
