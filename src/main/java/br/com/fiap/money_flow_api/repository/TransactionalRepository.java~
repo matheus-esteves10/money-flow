@@ -1,0 +1,2 @@
+package br.com.fiap.money_flow_api.repository;public interface TransactionalRepository {
+}
