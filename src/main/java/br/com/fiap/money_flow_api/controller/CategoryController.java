@@ -2,6 +2,7 @@ package br.com.fiap.money_flow_api.controller;
 
 import br.com.fiap.money_flow_api.model.Category;
 import br.com.fiap.money_flow_api.repository.CategoryRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class CategoryController {
     }
 
     @PostMapping()
-    public ResponseEntity<Category> create(@RequestBody Category category) {
+    public ResponseEntity<Category> create(@RequestBody @Valid Category category) {
         logger.info("Cadastrando... " + category.getName());
         repository.save(category);
         return ResponseEntity.status(201).body(category);
@@ -49,7 +50,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public Category editById (@PathVariable Long id, @RequestBody Category category) {
+    public Category editById (@PathVariable Long id, @RequestBody @Valid Category category) {
         logger.info("Editando " + id);
 
         getCategory(id);
