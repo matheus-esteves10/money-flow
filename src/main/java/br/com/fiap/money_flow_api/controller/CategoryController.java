@@ -2,8 +2,12 @@ package br.com.fiap.money_flow_api.controller;
 
 import br.com.fiap.money_flow_api.model.Category;
 import br.com.fiap.money_flow_api.repository.CategoryRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +28,21 @@ public class CategoryController {
     private CategoryRepository repository;
 
     @GetMapping()
+    @Cacheable("categories")
     public List<Category> getCategories() {
         return repository.findAll();
     }
 
     @PostMapping()
+    @CacheEvict(value = "categories", allEntries = true)
+    @Operation(
+            summary = "Cadastrar categoria",
+            description = "Insere uma categoria...",
+            responses = {
+                    @ApiResponse(responseCode = "201"),
+                    @ApiResponse(responseCode = "400")
+            }
+    )
     public ResponseEntity<Category> create(@RequestBody @Valid Category category) {
         logger.info("Cadastrando... " + category.getName());
         repository.save(category);
