@@ -24,6 +24,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers(HttpMethod.DELETE, "users/**").hasRole("ADMIN") //para apagar outro user precisa ter papel de admin
                     .requestMatchers("transactions/**").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "users/**").permitAll()
                     .anyRequest().authenticated() //autenticado para realizar qualquer request
                 )
                 .csrf(csrf -> csrf.disable())
@@ -32,13 +33,13 @@ public class SecurityConfig {
                 .build();
     }
 
-    @Bean
-    UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager(List.of(
-                User.withUsername("user").password("$2a$12$am.sOEnsyz86P6YAJ3vJzuO2864MGlVi.6TXM8PAWZ1aH2SC6Irky").roles("ADMIN").build(),
-                User.withUsername("user").password("$2a$12$am.sOEnsyz86P6YAJ3vJzuO2864MGlVi.6TXM8PAWZ1aH2SC6Irky").roles("USER").build()
-        ));
-    }
+//    @Bean
+//    UserDetailsService userDetailsService() {
+//        return new InMemoryUserDetailsManager(List.of(
+//                User.withUsername("user").password("$2a$12$am.sOEnsyz86P6YAJ3vJzuO2864MGlVi.6TXM8PAWZ1aH2SC6Irky").roles("ADMIN").build(),
+//                User.withUsername("user").password("$2a$12$am.sOEnsyz86P6YAJ3vJzuO2864MGlVi.6TXM8PAWZ1aH2SC6Irky").roles("USER").build()
+//        ));
+//    }
 
     @Bean
     PasswordEncoder passwordEncoder(){
