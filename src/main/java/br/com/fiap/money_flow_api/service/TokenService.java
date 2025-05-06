@@ -4,6 +4,7 @@ import br.com.fiap.money_flow_api.dto.TokenDto;
 import br.com.fiap.money_flow_api.model.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -27,5 +28,14 @@ public class TokenService {
                 .sign(algorithm);
 
         return new TokenDto(jwt, user.getEmail());
+    }
+
+    public User getUserFromToken(String jwt) {
+        var jwtVerificado = JWT.require(algorithm).build().verify(jwt);
+        return User.builder()
+                .id(Long.parseLong(jwtVerificado.getSubject()))
+                .email(jwtVerificado.getClaim("email").toString())
+                .role(jwtVerificado.getClaim("role").asString())
+                .build();
     }
 }
