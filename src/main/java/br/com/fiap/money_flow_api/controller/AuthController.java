@@ -1,0 +1,38 @@
+package br.com.fiap.money_flow_api.controller;
+
+import br.com.fiap.money_flow_api.dto.LoginDto;
+import br.com.fiap.money_flow_api.dto.TokenDto;
+import br.com.fiap.money_flow_api.model.User;
+import br.com.fiap.money_flow_api.service.AuthService;
+import br.com.fiap.money_flow_api.service.TokenService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class AuthController {
+
+    @Autowired
+    private AuthService service;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private TokenService tokenService;
+
+    @PostMapping("/login")
+    public TokenDto login(@RequestBody LoginDto credentials) {
+        var user = (User) service.loadUserByUsername(credentials.email());
+
+        if(!passwordEncoder.matches(credentials.password(), user.getPassword())) {
+            throw new BadCredentialsException("Invalid credentials");
+        }
+
+        return tokenService.createToken(user);
+
+    }
+}
